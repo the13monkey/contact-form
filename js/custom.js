@@ -1,30 +1,34 @@
 $(document).ready(function(){
 
-   $('#contactform').on('submit', function(event){
-       event.preventDefault();
-       $.ajax({
-           url: 'process.php',
-           method: 'POST',
-           data: $(this).serialize(),
-           dataType: 'json',
-           beforeSend: function(){
-               $('#submit').attr({
-                   disabled: 'disabled',
-                   style: 'cursor:not-allowed'
-               });
-           },
-           success: function(data){
-                $('#submit').attr('disabled', false);
-                if (data.success) {
-                    $('#contactform')[0].reset();
-                    $('.error').text('');
-                    grecaptcha.reset();
-                   
+    var phones = [{ "mask": "(###) ###-####"}, { "mask": "(###) ###-####"}];
+    $('#phone').inputmask({ 
+         mask: phones, 
+        greedy: false, 
+        definitions: { '#': { validator: "[0-9]", cardinality: 1}} 
+    });
+   
+    $('#contactform').submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: 'process.php',
+            method: 'POST',
+            data: $(this).serialize(),
+            dataType: 'JSON',
+            cache: false,
+            success: function(result) {  
+                if (result.err_name == '' && result.err_phone == '' && result.err_captcha == '') {
+                    var redirect_url = "thankyou.php";
+                    $(location).attr('href', redirect_url);
                 } else {
-                    $('#error').text('Something went wrong, please try again');
+                    $('#err-name').text(result.err_name);
+                    $('#err-phone').text(result.err_phone);
+                    $('#err-captcha').text(result.err_captcha);
                 }
-           }
-       });
-   });
+                
+            }
+        });
+    });
 
+ 
 });
+
