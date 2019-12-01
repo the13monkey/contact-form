@@ -5,3 +5,6 @@ A button loads a form. Form submission leads to a thank you page where conversio
 * Formatted numbers
 * File upload (File Types: JPG, JPEG, PNG, GIF, PDF | File Zie: <2M)
 * Google reCapthca API
+```
+_no_upload files = functions don't include file upload.
+```
